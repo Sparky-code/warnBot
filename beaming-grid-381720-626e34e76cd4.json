@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "beaming-grid-381720",
+  "private_key_id": "626e34e76cd4d60b76328eab0c71d1c353b1c382",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDh8t833eDRCUO/\n5+Yynp493t0N+pWJNRzH0DQ0aVfc0JKEYVSCjmGk74XS8qGkRUGqNuZ8FbaGzHt6\nxclTxLecwmI1v0sdJe353Sy2V61dpxW+Z6tzgczVzpixBIRDXNkSqoi0l+37+jhh\nu2nFXrwBFXAk9sDh/fINsOCjvLo9PoB8Pe/cH61CEZuIyIpxfQDTYRuf9BCmO5zZ\ndzZdI6osTdePGXTxhC2YKVrW05SzYgPo5rFxzgaPiKYD6l9qtg35YcbC7mHEE/Pv\nHJ7eGAJwHMI3hLFdE+cWGX4u1u4WoHOgJ2eAUgLxkKcN8bfEsxEkBLc9npKsxWUQ\nD7WqqXVjAgMBAAECggEATuuRMidKvljZFC/AxQ+IQB4W4ioTjyBBFD3R7jiZWuRz\nOM/yP8PRsVWETcE32nPiUrzoVpES9xR3UNPC1YKRi6yNty5A40Z7T9oEIxCO2nZg\n7uexCCBfVpLZ3IKyXAETRSTRqRqkIm4swV4/vJOxYUOGrzKM/qK/qC6O2EI0Xu1M\nvXWMkPOIL2D44mMCvZBRP0pobboKQx+gd5S63qAZ8+q+8AGCbwPELJR54KgYgnGj\nEXcHg+o79flqLE2u6kS8jcgfNiCse/x6VehrpPERLvo3UUVtEc+wS/UOgHssFaaM\nPpxWQPO6MxC3nlpZBjA7b6iH4Z3snRXpkGPLTzHdEQKBgQD5hQ9otJLHCmCkl/Sj\nQcQdw879gBvYQ3Tp7prqr6cn5Bhii5Zii4W+V8AZiPJuOPu7ZSB8Qw7z8EP2d+xY\n0f5LuxQm9S0+Wh5tKA/9qFw1dp9G2TcwwDfRexj4yleeGAv5c+qQhX0bKBGBQNiu\n9AJPQtceb3BSVR74lXkAYEg+eQKBgQDn0RlS6Tw1k4Fo4n3jzXbC7IxRDWAh9hMN\ngxkyEErWOYdBHTqZKgPPy1jMlMtAVAQwCHbwlYOFuD92H4DemAz6gF4NgquPA3ac\n/qUZNxzFVfYl2riogzgC0j6HL+TiojV8f0eCoZDRqEtCk0p+mrSE6KNJCyHvkHed\nInWQVzGruwKBgQDSOXkyDnFboTKrehtzMQW6zi6nBjhvjOYD8jQzZqq+wT6KSHD7\ntfGI3QXMfcVDeF8fE6S7DQScIeIg1gkbDFHkHEpuSENGNUdNUGOooyCNKtQnLPuC\n53Af3ka71j7bxAbStQb7nHw7VRbqf2gQfyUzAm2cBufrdiwR5F1+I6C6gQKBgGoc\ntdnU94GSvqbzHisbjuRVATnMxJdnG3uQ6gSXnpoHBVmR9pPLvqjsbP5gkdUlYDFY\nfpFL70NTfoEklInP0gkMn4DRspQpQq9EhPBQ4POXkK/tOZ+xSP9Jm+On0b7H/3G4\nlVQ/fpnpzmFwKKZhTIaWMsApv2P4njgoYOYsc4knAoGAXLJ0zANe0OwjtgH0hcKO\nGA4njv+Wdlcb0lVEBPIbM1wlD741r0PymLeB6Ow1DUlmoZ1o/q4/xLQjJbxvr7dE\nQ+ZlPmBnlA5We2aO3YQkSiS0lKLWdIfYeKmPwgiRfsA1xGV5mlo2hRwcArqCSHI/\n36C/JoycgdEEwBGs/MmWCiA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "warndataca@beaming-grid-381720.iam.gserviceaccount.com",
+  "client_id": "100589858814592075582",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/warndataca%40beaming-grid-381720.iam.gserviceaccount.com"
+}
