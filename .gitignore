@@ -1,0 +1,11 @@
+# virtualenv (created in repo root)
+bin/
+lib/
+include/
+pyvenv.cfg
+# secrets
+*.json
+.env
+# python
+__pycache__/
+*.pyc

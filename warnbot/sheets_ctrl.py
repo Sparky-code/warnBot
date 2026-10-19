@@ -1,3 +1,5 @@
+import os
+
 import gspread
 from datetime import *
 import pandas as pd
@@ -7,7 +9,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 
 # add credentials to the account
-creds = ServiceAccountCredentials.from_json_keyfile_name('beaming-grid-381720-626e34e76cd4.json', scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(os.environ['GOOGLE_APPLICATION_CREDENTIALS'], scope)
 
 # authorize the clientsheet 
 client = gspread.authorize(creds)
@@ -28,7 +30,6 @@ records_df = pd.DataFrame.from_dict(records_data)
 # now(-7d) > count of rows matching that band > recent = r
 start_date = (datetime.now() - timedelta(days=7)).strftime('%Y%m%d')
 end_date = datetime.now().strftime('%Y%m%d')
-date_mod = df.astype({'Notice_Date':'int'})
 recent_mask = (records_df.astype({'Notice_Date':'int'})['Notice_Date'] > start_date) & (records_df['Notice_Date'] <= end_date)
 recent_view = records_df.loc[recent_mask]
 print(recent_view)
