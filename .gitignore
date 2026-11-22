@@ -6,6 +6,9 @@ pyvenv.cfg
 # secrets
 *.json
 .env
+# local state
+data/*.db
+data/*.db-journal
 # python
 __pycache__/
 *.pyc
