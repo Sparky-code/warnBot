@@ -1,14 +1,28 @@
-# virtualenv (created in repo root)
-bin/
-lib/
-include/
-pyvenv.cfg
-# secrets
-*.json
+# Environment and secrets
 .env
-# local state
-data/*.db
-data/*.db-journal
-# python
+.env.*
+!.env.example
+
+# Local data
+data/*
+!data/.gitkeep
+
+# OS and editors
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Python
+.venv/
 __pycache__/
-*.pyc
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+
+# Credentials: no JSON key files in the repo root (an old Google
+# service-account key once leaked here)
+/*.json
+!/renovate.json

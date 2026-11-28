@@ -1,4 +1,5 @@
 """Turn a WARN notice into a Mastodon post."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -26,7 +27,9 @@ def _effective(notice: dict[str, Any]) -> str | None:
 def format_notice(notice: dict[str, Any]) -> str:
     """A post of at most MAX_LENGTH characters describing one notice."""
     employees = notice.get("employees")
-    people = f"{employees} employee{'s' if employees != 1 else ''}" if employees is not None else None
+    people = (
+        f"{employees} employee{'s' if employees != 1 else ''}" if employees is not None else None
+    )
     where = " · ".join(p for p in (notice.get("county"), people) if p)
     when = " · ".join(p for p in (f"Notice {notice['notice_date']}", _effective(notice)) if p)
     tail = "\n".join(p for p in (where, when, TAGS) if p)

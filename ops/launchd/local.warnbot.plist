@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Daily run of warnbot. ops/launchd/install.sh fills in __REPO__ and
+  __HOME__ and loads it; edit StartCalendarInterval to change the schedule.
+  launchd runs a missed job when the Mac wakes.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.warnbot</string>
+  <key>WorkingDirectory</key>
+  <string>__REPO__</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>uv run --env-file .env warnbot run</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>6</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>__HOME__/Library/Logs/warnbot/out.log</string>
+  <key>StandardErrorPath</key>
+  <string>__HOME__/Library/Logs/warnbot/err.log</string>
+</dict>
+</plist>
