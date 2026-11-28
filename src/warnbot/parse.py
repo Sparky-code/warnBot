@@ -8,12 +8,14 @@ serial numbers, and the sheet ends with non-data rows such as totals. Columns
 are therefore found by header name, and rows without a company and a valid
 notice date are skipped.
 """
+
 from __future__ import annotations
 
 import datetime as dt
 import html
 import io
 import re
+import warnings
 from typing import Any
 
 from openpyxl import load_workbook
@@ -86,8 +88,18 @@ def _header_map(row: tuple[Any, ...]) -> dict[str, int] | None:
 
 def parse_report(data: bytes) -> list[dict[str, Any]]:
     """Rows of the detailed WARN report, as dicts with the keys of FIELDS."""
+    with warnings.catch_warnings():
+        # The EDD file uses Excel data validation, which openpyxl drops (harmless).
+        warnings.filterwarnings("ignore", "Data Validation extension", UserWarning)
+        return _parse(data)
+
+
+def _parse(data: bytes) -> list[dict[str, Any]]:
     wb = load_workbook(io.BytesIO(data), read_only=True, data_only=True)
-    sheet = next((ws for ws in wb.worksheets if ws.title.strip().lower().startswith("detailed warn report")), None)
+    sheet = next(
+        (ws for ws in wb.worksheets if ws.title.strip().lower().startswith("detailed warn report")),
+        None,
+    )
     if sheet is None:
         raise ValueError(f"No 'Detailed WARN Report' sheet (sheets: {wb.sheetnames})")
 
@@ -98,8 +110,8 @@ def parse_report(data: bytes) -> list[dict[str, Any]]:
             cols = _header_map(row)
             continue
 
-        def get(field: str) -> Any:
-            i = cols.get(field)  # type: ignore[union-attr]
+        def get(field: str, row: tuple[Any, ...] = row, cols: dict[str, int] = cols) -> Any:
+            i = cols.get(field)
             return row[i] if i is not None and i < len(row) else None
 
         company = _text(get("company"))

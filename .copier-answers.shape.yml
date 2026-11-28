@@ -1,0 +1,12 @@
+# Changes here will be overwritten by Copier; do not edit by hand.
+_commit: dd3765c
+_src_path: gh:Sparky-code/templates
+author: Sparky-code
+description: Posts new California WARN Act layoff notices to Mastodon.
+is_job: true
+layer: shape
+license: UNLICENSED
+package_name: warnbot
+project_name: warnbot
+shape: python-cli
+uses_claude: false

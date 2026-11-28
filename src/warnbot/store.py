@@ -1,4 +1,4 @@
-"""Local state in SQLite: which WARN rows have been seen and which notices posted.
+"""Notice state in SQLite: which WARN rows have been seen and which notices posted.
 
 Replaces the Google Sheet the bot used to read and write, so no Google
 credentials are needed.
@@ -14,13 +14,14 @@ Notice status:
   posted   posted to Mastodon
   failed   posting failed MAX_ATTEMPTS times; left alone
 """
+
 from __future__ import annotations
 
 import datetime as dt
 import hashlib
 import sqlite3
-from pathlib import Path
-from typing import Any, Iterable
+from collections.abc import Iterable
+from typing import Any
 
 MAX_ATTEMPTS = 5
 
@@ -36,36 +37,9 @@ ROW_FIELDS = (
     "industry",
 )
 
-SCHEMA = """
-CREATE TABLE IF NOT EXISTS rows (
-  row_key        TEXT PRIMARY KEY,
-  notice_key     TEXT NOT NULL,
-  county         TEXT,
-  notice_date    TEXT NOT NULL,
-  processed_date TEXT,
-  effective_date TEXT,
-  company        TEXT NOT NULL,
-  layoff_closure TEXT,
-  employees      INTEGER,
-  address        TEXT,
-  industry       TEXT,
-  first_seen     TEXT NOT NULL
-);
-CREATE INDEX IF NOT EXISTS rows_notice ON rows (notice_key);
-CREATE TABLE IF NOT EXISTS notices (
-  notice_key  TEXT PRIMARY KEY,
-  status      TEXT NOT NULL CHECK (status IN ('seeded', 'pending', 'posted', 'failed')),
-  first_seen  TEXT NOT NULL,
-  status_id   TEXT,
-  posted_at   TEXT,
-  attempts    INTEGER NOT NULL DEFAULT 0,
-  last_error  TEXT
-);
-"""
-
 
 def _now() -> str:
-    return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+    return dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
 
 
 def _norm(value: Any) -> str:
@@ -85,15 +59,11 @@ def notice_key(row: dict[str, Any]) -> str:
 
 
 class Store:
-    def __init__(self, path: str | Path):
-        if str(path) != ":memory:":
-            Path(path).parent.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(str(path))
-        self.db.row_factory = sqlite3.Row
-        self.db.executescript(SCHEMA)
+    """Notice state on a connection from db.connect (the schema is migration 2 there)."""
 
-    def close(self) -> None:
-        self.db.close()
+    def __init__(self, conn: sqlite3.Connection):
+        self.db = conn
+        self.db.row_factory = sqlite3.Row
 
     def is_empty(self) -> bool:
         return self.db.execute("SELECT 1 FROM rows LIMIT 1").fetchone() is None
@@ -112,12 +82,14 @@ class Store:
             for row in rows:
                 nk = notice_key(row)
                 self.db.execute(
-                    f"INSERT OR IGNORE INTO rows (row_key, notice_key, {', '.join(ROW_FIELDS)}, first_seen) "
-                    f"VALUES (?, ?, {', '.join('?' for _ in ROW_FIELDS)}, ?)",
+                    "INSERT OR IGNORE INTO rows"
+                    f" (row_key, notice_key, {', '.join(ROW_FIELDS)}, first_seen)"
+                    f" VALUES (?, ?, {', '.join('?' for _ in ROW_FIELDS)}, ?)",
                     (row_key(row), nk, *(row.get(f) for f in ROW_FIELDS), now),
                 )
                 cur = self.db.execute(
-                    "INSERT OR IGNORE INTO notices (notice_key, status, first_seen) VALUES (?, ?, ?)",
+                    "INSERT OR IGNORE INTO notices (notice_key, status, first_seen)"
+                    " VALUES (?, ?, ?)",
                     (nk, status, now),
                 )
                 if cur.rowcount:
@@ -138,7 +110,12 @@ class Store:
         return [self.notice(k) for k in keys]
 
     def notice(self, key: str) -> dict[str, Any]:
-        rows = [dict(r) for r in self.db.execute("SELECT * FROM rows WHERE notice_key = ? ORDER BY effective_date", (key,))]
+        rows = [
+            dict(r)
+            for r in self.db.execute(
+                "SELECT * FROM rows WHERE notice_key = ? ORDER BY effective_date", (key,)
+            )
+        ]
         if not rows:
             raise KeyError(key)
         first = rows[0]
@@ -167,7 +144,8 @@ class Store:
     def mark_posted(self, key: str, status_id: str | None) -> None:
         with self.db:
             self.db.execute(
-                "UPDATE notices SET status = 'posted', status_id = ?, posted_at = ?, last_error = NULL WHERE notice_key = ?",
+                "UPDATE notices SET status = 'posted', status_id = ?, posted_at = ?,"
+                " last_error = NULL WHERE notice_key = ?",
                 (status_id, _now(), key),
             )
 
@@ -182,4 +160,7 @@ class Store:
             )
 
     def counts(self) -> dict[str, int]:
-        return {r["status"]: r["n"] for r in self.db.execute("SELECT status, COUNT(*) AS n FROM notices GROUP BY status")}
+        return {
+            r["status"]: r["n"]
+            for r in self.db.execute("SELECT status, COUNT(*) AS n FROM notices GROUP BY status")
+        }

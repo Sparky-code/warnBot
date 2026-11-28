@@ -1,0 +1,49 @@
+[project]
+name = "warnbot"
+version = "0.1.0"
+description = "Posts new California WARN Act layoff notices to Mastodon."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "httpx>=0.28.1",
+    "openpyxl>=3.1.5",
+    "typer>=0.29.2",
+]
+
+[project.scripts]
+warnbot = "warnbot.cli:app"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+    "types-openpyxl>=3.1.5.20261122",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.9,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "warnbot"
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# Company names carry typographic apostrophes (decoded from HTML entities).
+"tests/*" = ["RUF001"]
+
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not live'"
+markers = ["live: talks to real external services; run with `pytest -m live`"]
